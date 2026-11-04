@@ -25,10 +25,17 @@
 /
 ├── AGENTS.md            ← agent 读的仓库配置入口（issue tracker / 标签 / 域文档路径）
 ├── README.md
-├── .gitignore           ← 覆盖 macOS/Windows、编辑器、Node/Python/通用产物
-├── docs/
-│   └── agents/          ← 配置正文：issue-tracker.md、triage-labels.md、domain.md
-└── src/                 ← 源码，等技术栈定了再填
+├── .gitignore           ← 通用条目 + Godot（.godot/、build/、*.apk）
+├── project.godot        ← Godot 工程入口
+├── export_presets.cfg   ← Android 导出配置（debug 签名）
+├── scenes/main.tscn     ← 主场景；世界在 `scripts/main.gd` 里用代码搭
+├── scripts/
+│   ├── main.gd          ← 相机 / 6 地块 / 单指点选 / HUD
+│   ├── balance.gd       ← 全部数值（成熟时间、价格、初始金币…）
+│   └── save_manager.gd  ← 原子写存档（tmp → rename，保留 .bak）
+├── assets/models/       ← M2 的 8 个 .glb（Blender 脚本生成）
+├── build/               ← APK 与截图，已 gitignore
+└── docs/                ← spec.md、screenshot、agents/ 配置
 ```
 
 ## 约定
@@ -55,4 +62,34 @@
 
 ## 本地开发
 
-暂无构建与运行方式。技术栈定了以后在这里补：怎么装、怎么跑、怎么测。
+**环境**（都在这台机器的 D 盘，C 盘只用到你原有的 Android SDK）：
+
+- Godot 4.7.2：`D:\Godot\Godot_v4.7.2-stable_win64.exe`（自包含模式，配置与导出模板在 `D:\Godot\editor_data`，不写 C 盘 AppData）
+- Android SDK：`C:\Users\rongyao\AppData\Local\Android\Sdk`（导出用 build-tools 36.1.0）
+- debug keystore：`D:\Godot\android\debug.keystore`（`storepass` / `keypass` 均为 `android`）
+
+**打开工程**：用上面的 Godot 直接打开本目录。
+
+**桌面跑**：
+
+```bash
+"D:\Godot\Godot_v4.7.2-stable_win64.exe" --path .
+```
+
+调试参数（无人值守验收用）：`-- --tap=640,470 --shot=res://build/shot.png` 会模拟一次点击并截图。
+
+**导出 APK**：
+
+```bash
+"D:\Godot\Godot_v4.7.2-stable_win64_console.exe" --headless --path . --export-debug "Android" build/xiaonongchang.apk
+```
+
+**装到手机**（手机先开 USB 调试并连上）：
+
+```bash
+"C:\Users\rongyao\AppData\Local\Android\Sdk\platform-tools\adb.exe" install -r build/xiaonongchang.apk
+```
+
+**存档位置**：手机上是应用私有目录；桌面调试时在 `%APPDATA%\Godot\app_userdata\小农场\save.json`。
+
+![M1 桌面截图](docs/screenshot-m1.png)
