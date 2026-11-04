@@ -1,0 +1,49 @@
+# OS
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+*~
+
+# Secrets and local env
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs and caches
+*.log
+.cache/
+tmp/
+.temp/
+
+# Node / TypeScript
+node_modules/
+.pnpm-store/
+dist/
+coverage/
+*.tsbuildinfo
+.npm/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Build output shared by many stacks
+build/
+out/
