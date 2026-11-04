@@ -93,3 +93,4 @@
 **存档位置**：手机上是应用私有目录；桌面调试时在 `%APPDATA%\Godot\app_userdata\小农场\save.json`。
 
 ![M1 桌面截图](docs/screenshot-m1.png)
+![M1 真机截图（HONOR AMP-AN00 / Android 16）](docs/screenshot-device.png)
