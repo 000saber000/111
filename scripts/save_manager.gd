@@ -9,7 +9,7 @@ const SAVE_PATH := "user://save.json"
 const TMP_PATH := "user://save.json.tmp"
 const BAK_PATH := "user://save.json.bak"
 
-const SCHEMA_VERSION := 1
+const SCHEMA_VERSION := 2
 
 
 static func default_data() -> Dictionary:
@@ -30,11 +30,24 @@ static func load_data() -> Dictionary:
 		data = _read_json(BAK_PATH)
 	if data.is_empty() or not data.has("plots"):
 		return default_data()
-	if int(data.get("version", 0)) != SCHEMA_VERSION:
-		# M1 还没有迁移逻辑：版本对不上就当新档，别让旧档把游戏卡死。
-		push_warning("save version mismatch, starting fresh")
-		return default_data()
+	data = _migrate(data)
 	return data
+
+
+static func _migrate(data: Dictionary) -> Dictionary:
+	## v1（M1 占位）里地块状态叫 "selected"，v2 起是 empty/growing/mature。
+	var version := int(data.get("version", 0))
+	if version == SCHEMA_VERSION:
+		return data
+	var fresh := default_data()
+	if version < 2:
+		for i in mini((data.get("plots", []) as Array).size(), (fresh["plots"] as Array).size()):
+			var old_state := String((data["plots"][i] as Dictionary).get("state", "empty"))
+			fresh["plots"][i]["state"] = "empty" if old_state == "selected" else old_state
+		fresh["coins"] = int(data.get("coins", Balance.START_COINS))
+		fresh["last_seen_at"] = int(data.get("last_seen_at", fresh["last_seen_at"]))
+	fresh["version"] = SCHEMA_VERSION
+	return fresh
 
 
 static func save_data(data: Dictionary) -> bool:
