@@ -47,10 +47,11 @@
 
 ## 下一步
 
-1. **定玩法**：一句话说清玩家在玩什么、怎么算赢，补进上面「这是什么」
-2. **选引擎**：在 Android 原生（Kotlin + Canvas/Compose）、Godot、Unity、Cocos 之间挑一个，把选型理由写进 `docs/`
-3. **跑通构建链**：搭出第一个空场景并真正导出一次 APK，装到手机上验证 Gradle / 引擎的导出流程没问题
-4. **拆票**：开第一张 issue，或用 wayfinder 开第一张探索地图，把玩法拆成能做的票
+玩法、引擎、数值、资产、存档、里程碑已经定死在 [`docs/spec.md`](docs/spec.md)（一次完整 grill 的结论）。按三个里程碑顺序推进，**不绑日期**——里程碑是门槛，不是期限：
+
+1. [#1 M1 端上跑通](https://github.com/000saber000/111/issues/1)：Godot 工程 + 6 地块 + 点选 + 导出 APK 装机
+2. [#2 M2 闭环打通](https://github.com/000saber000/111/issues/2)：种植/生长/收获/金币 + 离线结算 + 8 个资产
+3. [#3 M3 打磨与验收](https://github.com/000saber000/111/issues/3)：音效/反馈/横屏 UI/真机稳定
 
 ## 本地开发
 
