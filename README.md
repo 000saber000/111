@@ -2,7 +2,7 @@
 
 一个安卓 APK 小游戏：Godot 4.7.2 做的 3D 低模农场，横屏、纯单机。
 
-**状态（2026-11-05）**：M1、M2 已真机验收并关闭；M3「打磨与验收」的实现与桌面验收已完成，只剩**真机连续 5 分钟稳定性**与把 APK 发给朋友这一步（见 [#3](https://github.com/000saber000/111/issues/3)）。
+**状态（2026-11-05）**：M1、M2 已真机验收并关闭；M3「打磨与验收」的实现、桌面验收与**真机连续 5 分钟稳定性**都已通过，只剩把 APK 发给朋友收一条反馈（[#3](https://github.com/000saber000/111/issues/3)）。
 
 ## 这是什么
 
@@ -68,7 +68,7 @@
 
 1. ✅ [#1 M1 端上跑通](https://github.com/000saber000/111/issues/1)：Godot 工程 + 6 地块 + 点选 + 导出 APK 装机
 2. ✅ [#2 M2 闭环打通](https://github.com/000saber000/111/issues/2)：种植/生长/收获/金币 + 离线结算 + 8 个资产
-3. ⏳ [#3 M3 打磨与验收](https://github.com/000saber000/111/issues/3)：音效/反馈/横屏 UI 已实现；待真机 5 分钟验收 + 朋友试玩反馈
+3. ⏳ [#3 M3 打磨与验收](https://github.com/000saber000/111/issues/3)：音效/反馈/横屏 UI/图标已实现，真机 5 分钟稳定性已通过；待朋友试玩反馈
 
 ## 本地开发
 
@@ -137,3 +137,6 @@ python tools/icon/generate_icon.py
 ![M3 桌面：成熟地块与旋转金币](docs/screenshot-m3-mature.png)
 ![M3 桌面：收获反馈（+45 跳字、金币飞向 HUD）](docs/screenshot-m3-harvest.png)
 ![M3 桌面：关掉 30 分钟回来，6 块熟了](docs/screenshot-m3-offline.png)
+![M3 真机（HONOR AMP-AN00 / Android 16）：收获反馈 +45 与金币飞向 HUD](docs/screenshot-m3-device.png)
+![M3 真机：离线 38 分钟回来，6 块全熟](docs/screenshot-m3-device-offline.png)
+![M3 真机：5 分钟连续种收循环后仍稳定](docs/screenshot-m3-device-soak.png)

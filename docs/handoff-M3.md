@@ -20,9 +20,9 @@
 
 ## 一句话现状
 
-- 分支 `main`，M1、M2 已真机验收并关闭；`#3` 已被本会话认领（assignee 000saber000），实现完成、桌面验收通过，**没关票**——差真机 5 分钟与朋友反馈。
-- APK：`build/xiaonongchang.apk`（约 28.6 MB，`com.saber.farm`，arm64-v8a，debug 签名，已带自适应图标与三套音效）。
-- 桌面截图：`docs/screenshot-m3-empty.png`、`-growing`、`-mature`、`-harvest`、`-offline`。
+- 分支 `main`，M1、M2 已真机验收并关闭；`#3` 已被认领（assignee 000saber000），实现 + 桌面验收 + **真机 5 分钟稳定性都通过**，**没关票**——只差朋友试玩反馈（spec 的 M3 交付项，要人做）。
+- APK：`build/xiaonongchang.apk`（约 28.6 MB，`com.saber.farm`，arm64-v8a，debug 签名，已带自适应图标与三套音效），已装在那台 HONOR AMP-AN00 上。
+- 桌面截图：`docs/screenshot-m3-empty.png`、`-growing`、`-mature`、`-harvest`、`-offline`；真机截图：`-device`、`-device-offline`、`-device-soak`、`-device-empty`。
 
 ## 本次 M3 交付（代码）
 
@@ -68,29 +68,42 @@
 
 调试参数全表：`--shot=path`、`--shot-frame=N`、`--fresh`、`--demo=plant|growing|mature|harvest`、`--tap=x,y`、`--mature`、`--mute`。`--shot` 与 `--fresh` 会自动关闭存档写入（截图不污染玩家档）。
 
-## 真机 5 分钟验收清单（spec 的第 1、3 条 + 稳定性）
+## 真机验收（已通过，2026-11-05）
 
-> 手机：HONOR AMP-AN00（Android 16，1224×2700 竖屏；横屏坐标 2700×1224）。无线调试端口每次重连都会变，**向用户要当前的「IP:端口」**。
+> 手机：HONOR AMP-AN00（Android 16，1224×2700 竖屏；横屏坐标 2700×1224）。无线调试端口每次重连都会变，**向用户要当前的「IP:端口」**（本次是 `172.30.102.249:42689`，下次会变）。
 
 ```bash
 ADB="C:/Users/rongyao/AppData/Local/Android/Sdk/platform-tools/adb.exe"
 "$ADB" connect <ip>:<port>
 "$ADB" install -r "D:/dsh project/111/build/xiaonongchang.apk"
-"$ADB" exec-out screencap -p > "D:/dsh project/111/build/m3-device.png"
-"$ADB" shell input tap <x> <y>
+"$ADB" shell monkey -p com.saber.farm -c android.intent.category.LAUNCHER 1
+"$ADB" exec-out screencap -p > "D:/dsh project/111/build/x.png"
 ```
 
-逐条打勾：
+**横屏点击坐标（2700×1224，本次实测可用）**：
 
-- [ ] 桌面图标是新的「小农场」图标（自适应图标，圆形/圆角裁切都正常）；冷启动不崩，进入约 2 秒内
-- [ ] 点空地：听到种植音，金币 −20，出现种子模型，地块上出现进度条，底部提示变成「种下 #N（−20）」
-- [ ] 点生长中的地：跳字显示剩余时间（「还要 5:12」这类），有轻微提示音
-- [ ] 点 `DEBUG: 立刻成熟`：作物变熟、出现金币、状态行成熟数 +1
-- [ ] 点成熟地块：收获音 + 金币音（有先后，不糊）、「+45」跳字、金币小圆点飞向左上角金币数、金币数弹一下、轻微镜头震动
-- [ ] 连续玩 5 分钟：反复 种 → 立刻成熟 → 收 → 再种（金币不够时点 `DEBUG: +100 金币`），期间切后台 2–3 次再回来；不崩、不卡、无明显掉帧、声音不爆音
-- [ ] 杀进程重开：金币/地块状态正确（存档持久化）
-- [ ] `DEBUG: 回拨 2 小时`：有作物变熟、顶部提示「离线 120 分钟 · 回来啦，N 块熟了」（验证离线路径）
-- [ ] 把真机截图存到 `docs/screenshot-m3-device.png`，README 里补一行
+| 目标 | 坐标 |
+| --- | --- |
+| 6 块地（上排 3 / 下排 3） | `1061 476` / `1343 476` / `1625 476`；`1061 782` / `1343 782` / `1625 782` |
+| `DEBUG: 立刻成熟` | `258 915` |
+| `DEBUG: 回拨 2 小时` | `258 1003` |
+| `DEBUG: +100 金币` | `258 1091` |
+
+逐条结果：
+
+- [x] 冷启动不崩，正常横屏；APK 里确认有各密度启动图标 + 自适应图标（`aapt2 dump badging`：`application-icon-160…640` 都指向 `res/mipmap-anydpi-v26/icon.xml`）
+- [x] 点空地：金币 −20、出现种子与生长进度条、提示「种下 #N（−20）」；点生长中的地：跳字显示剩余时间
+- [x] `DEBUG: 立刻成熟`：6 块全熟、状态行「成熟 6」
+- [x] 点成熟地块：金币 +45、`+45` 跳字、金币圆点飞向 HUD、金币数弹一下、提示「收获 #N（+45）」（截图 `docs/screenshot-m3-device.png`）
+- [x] 真机启动时离线结算生效：真实存档离线 38 分钟回来 → 6 块全熟 + 「离线 38 分钟 · 回来啦，6 块熟了」（截图 `docs/screenshot-m3-device-offline.png`）
+- [x] 切后台（HOME）再回前台：状态保持
+- [x] **连续 5 分钟 35 轮 种→立刻成熟→收 循环**（期间 2 次切后台/回前台）：无崩溃、无 ANR、logcat 无应用报错；PSS 基线 389.8 MB → 全程 394–397 MB（末次 395.3 MB），无泄漏趋势；截图 `docs/screenshot-m3-device-soak.png`
+- [x] 杀进程/重开：金币与地块状态正确（存档持久化；`pid` 变化但数据一致）
+
+真机截图：`docs/screenshot-m3-device.png`、`-device-offline.png`、`-device-soak.png`、`-device-empty.png`。
+
+> 注：`adb` daemon 在长会话里偶尔会掉（`cannot connect to daemon`），`adb start-server` 后 `adb connect <ip>:<port>` 重连即可；期间失败的 `input tap` 不会生效，重连后补点就行。
+
 
 ## 环境（全在 D 盘，沿用 M2）
 
@@ -115,10 +128,9 @@ ADB="C:/Users/rongyao/AppData/Local/Android/Sdk/platform-tools/adb.exe"
 
 ## 没做 / 留给下一个会话
 
-- [ ] 真机 5 分钟稳定性（上面清单）
+- [x] 真机 5 分钟稳定性（已通过，记录见上一节）
 - [ ] 朋友试玩反馈（spec 的 M3 交付项，需要人）
-- [ ] 关 #3 前在票里贴验收记录、更新票面「真实状态」
-- [ ] README / docs 补真机截图
+- [ ] 收到反馈后把结果贴进 #3、关票
 - 规格里没要求的（不枯萎、不做人物、不联网、不上架）继续不做，别扩scope。
 
 ## 代码评审（/code-review）结论与处理
