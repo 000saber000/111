@@ -94,3 +94,4 @@
 
 ![M1 桌面截图](docs/screenshot-m1.png)
 ![M1 真机截图（HONOR AMP-AN00 / Android 16）](docs/screenshot-device.png)
+![M2 真机截图：成熟作物 + 金币（离线结算验证）](docs/screenshot-m2-device.png)

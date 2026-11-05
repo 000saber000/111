@@ -320,11 +320,17 @@ func _debug_mature_all() -> void:
 
 
 func _debug_rewind() -> void:
-	_data["last_seen_at"] = _now() - 7200
+	## 模拟「关掉 2 小时再打开」：last_seen_at 和生长中的 planted_at 一起往回拨，
+	## 这样 apply_offline() 走的完全是真实离线结算的代码路径。
+	var shift := 7200
+	_data["last_seen_at"] = _now() - shift
+	for plot in _data.get("plots", []):
+		if String(plot.get("state", STATE_EMPTY)) == STATE_GROWING:
+			plot["planted_at"] = int(plot.get("planted_at", _now())) - shift
 	_apply_offline()
 	_refresh_plots()
 	SaveManager.save_data(_data)
-	_message = "DEBUG：回拨 2 小时"
+	_message = "DEBUG：回拨 2 小时（模拟离线）"
 	_update_hud()
 
 
