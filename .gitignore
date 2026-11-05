@@ -25,6 +25,7 @@ desktop.ini
 .cache/
 tmp/
 .temp/
+.scratch/
 
 # Node / TypeScript
 node_modules/
